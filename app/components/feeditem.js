@@ -10,6 +10,7 @@ export default class FeedItem extends React.Component {
   constructor(props) {
       super(props);
       // The FeedItem's initial state is what the Feed passed to us.
+      console.log('feed item data is: ', this.props.data); //debug statement
       this.state = props.data;
     }
 
@@ -130,8 +131,8 @@ export default class FeedItem extends React.Component {
             {
               data.comments.map((comment, i) => {
                 // i is comment's index in comments array
-                return (
-                  <Comment key={i} author={comment.author} postDate={comment.postDate}>{comment.contents}</Comment>
+                return (          //added feedItemId = {this.state._id} so comments can update without callback and data = {comment} and commentID = {i}
+                  <Comment key={i} commentID = {i} feedItemId = {this.state._id} author={comment.author} postDate={comment.postDate} likeCounter = {comment.likeCounter} data = {comment}>{comment.contents}</Comment>
                 );
               })
               }

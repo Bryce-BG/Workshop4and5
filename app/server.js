@@ -92,7 +92,8 @@ export function postComment(feedItemId, author, contents, cb) {
   feedItem.comments.push({
     "author": author,
     "contents": contents,
-    "postDate": new Date().getTime()
+    "postDate": new Date().getTime(),
+    "likeCounter": [] //ADDED FOR WORKSHOP 8 STEP 8
   });
   writeDocument('feedItems', feedItem);
   // Return a resolved version of the feed item so React can
@@ -134,4 +135,40 @@ export function unlikeFeedItem(feedItemId, userId, cb) {
   }
   // Return a resolved version of the likeCounter
   emulateServerReturn(feedItem.likeCounter.map((userId) => readDocument('users', userId)), cb);
+}
+
+
+//FUNCTIONS NOT FINISHED YET
+
+
+
+
+
+
+
+/**
+ * Adds a 'like' to a comment.
+ */
+
+export function likeComment(feedItemId, userId, index, cb) {
+  var feedItem = readDocument('feedItems', feedItemId); //get feed item
+  var commentItem = feedItem.comments[index]; //get the specific item
+  commentItem.likeCounter.push(userId); //push changes to the comment
+  feedItem.comments[index] =  commentItem; //this needed? or are we just doing a reference to the item?
+  writeDocument('feedItems', feedItem);  // Return a resolved version of the likeCounter
+
+  emulateServerReturn(commentItem, cb);
+}
+
+
+export function unlikeComment(feedItemId, comindex, userId, cb) {
+  var feedItem = readDocument('feedItems', feedItemId);
+  var commentItem = feedItem.comments[comindex]; //get the comment at the index specified
+  var userIndex = commentItem.likeCounter.indexOf(userId); //get if user is in list and if so at what index
+  if (userIndex !== -1) {
+    commentItem.likeCounter.splice(userIndex, 1); //get rid of the user from like list
+    writeDocument('feedItems', feedItem); //write the item back
+  }
+
+  emulateServerReturn(commentItem, cb);
 }

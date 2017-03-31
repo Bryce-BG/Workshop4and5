@@ -54,18 +54,21 @@ var initialData = {
     // List of comments on the post
     "comments": [
       {
-        // The author of the comment.
+        "_id": 1,
         "author": 2,
         // The contents of the comment.
         "contents": "hope everything is ok!",
         // The date the comment was posted.
         // 01/24/16 22:00 EST
-        "postDate": 1453690800000
+        "postDate": 1453690800000,
+        "likeCounter": []  //added by BRYCE for step 8 of workshop 8
       },
       {
+        "_id": 2,
         "author": 3,
         "contents": "sending hugs your way?",
-        "postDate": 1453690800000
+        "postDate": 1453690800000,
+        "likeCounter": [] //added by BRYCE for step 8 of workshop 8
       }
     ]
   }

@@ -24,6 +24,7 @@ export default class CommentEntry extends React.Component {
   }
 
   render() {
+    
     return (
       <div>
         <div className="media-left media-top">
