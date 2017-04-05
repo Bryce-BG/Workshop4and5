@@ -68,7 +68,7 @@ var initialData = {
         "author": 3,
         "contents": "sending hugs your way?",
         "postDate": 1453690800000,
-        "likeCounter": [] //added by BRYCE for step 8 of workshop 8
+        "likeCounter": [] //added by BRYCE for step 8 of workshop 8 (is ending up shared by comments?)
       }
     ]
   }
@@ -96,6 +96,7 @@ var initialData = {
 };
 
 var data = JSON.parse(localStorage.getItem('facebook_data'));
+
 if (data === null) {
   data = JSONClone(initialData);
 }

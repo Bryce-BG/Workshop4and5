@@ -10,17 +10,21 @@ export default class FeedItem extends React.Component {
   constructor(props) {
       super(props);
       // The FeedItem's initial state is what the Feed passed to us.
-      console.log('feed item data is: ', this.props.data); //debug statement
+      //console.log('feed item data is: ', this.props.data); //debug statement
       this.state = props.data;
     }
 
-  handleCommentPost(commentText) {
-      // Post a comment as user ID 4, which is our mock user!
-      postComment(this.state._id, 4, commentText, (updatedFeedItem) => {
-        // Update our state to trigger a re-render.
-        this.setState(updatedFeedItem);
-      });
-    }
+
+    handleCommentPost(commentText) {
+        // Post a comment as user ID 4, which is our mock user!
+        postComment(this.state._id, 4, commentText, (updatedFeedItem) => {
+          // Update our state to trigger a re-render.
+          this.setState(updatedFeedItem);
+        });
+      }
+
+
+
   handleLikeClick(clickEvent) {
         // Stop the event from propagating up the DOM tree, since we handle it here.
         // Also prevents the link click from causing the page to scroll to the top.
@@ -123,7 +127,7 @@ export default class FeedItem extends React.Component {
         <div className="panel-footer">
           <div className="row">
             <div className="col-md-12">
-              <a href="#">{data.likeCounter.length} people</a> like this
+              <a href="#">{data.likeCounter.length} people like this</a>
             </div>
           </div>
           <hr />
@@ -131,8 +135,8 @@ export default class FeedItem extends React.Component {
             {
               data.comments.map((comment, i) => {
                 // i is comment's index in comments array
-                return (          //added feedItemId = {this.state._id} so comments can update without callback and data = {comment} and commentID = {i}
-                  <Comment key={i} commentID = {i} feedItemId = {this.state._id} author={comment.author} postDate={comment.postDate} likeCounter = {comment.likeCounter} data = {comment}>{comment.contents}</Comment>
+                return (          //added feedItemId = {this.state._id} so comments can update without callback and data = {comment}
+                  <Comment key={i}  feedItemId = {this.state._id} author={comment.author} postDate={comment.postDate} likeCounter = {comment.likeCounter} data = {comment}>{comment.contents}</Comment>
                 );
               })
               }

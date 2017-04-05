@@ -50,8 +50,11 @@ export function postStatusUpdate(user, location, contents, cb) {
 
   // Get the current UNIX time.
   var time = new Date().getTime();
+  var userData = readDocument('users', user); //get the user?
+  var feedData = readDocument('feeds', userData.feed); //get the user's feed
   // The new status update. The database will assign the ID for us.
   var newStatusUpdate = {
+    "_id": feedData.contents.length,
     "likeCounter": [],
     "type": "statusUpdate",
     "contents": {
@@ -69,8 +72,7 @@ export function postStatusUpdate(user, location, contents, cb) {
   newStatusUpdate = addDocument('feedItems', newStatusUpdate);
 
   // Add the status update reference to the front of the current user's feed.
-  var userData = readDocument('users', user); //get the user?
-  var feedData = readDocument('feeds', userData.feed); //get the user's feed?
+
   feedData.contents.unshift(newStatusUpdate._id);
 
   // Update the feed object.
@@ -89,12 +91,18 @@ export function postComment(feedItemId, author, contents, cb) {
   // update the embedded object, and then update the
   // document in the database.
   var feedItem = readDocument('feedItems', feedItemId);
-  feedItem.comments.push({
+  console.log("comments length:" + feedItem.comments.length);
+  var newComment ={
+    "_id": feedItem.comments.length+1, //needed to make sure that new commments have an id
     "author": author,
     "contents": contents,
     "postDate": new Date().getTime(),
     "likeCounter": [] //ADDED FOR WORKSHOP 8 STEP 8
-  });
+  };
+
+  feedItem.comments.push(newComment);
+
+
   writeDocument('feedItems', feedItem);
   // Return a resolved version of the feed item so React can
   // render it.
@@ -138,8 +146,6 @@ export function unlikeFeedItem(feedItemId, userId, cb) {
 }
 
 
-//FUNCTIONS NOT FINISHED YET
-
 
 
 
@@ -150,23 +156,31 @@ export function unlikeFeedItem(feedItemId, userId, cb) {
  * Adds a 'like' to a comment.
  */
 
-export function likeComment(feedItemId, userId, index, cb) {
+export function likeComment(feedItemId, index, userId, cb) {
   var feedItem = readDocument('feedItems', feedItemId); //get feed item
-  var commentItem = feedItem.comments[index]; //get the specific item
-  commentItem.likeCounter.push(userId); //push changes to the comment
-  feedItem.comments[index] =  commentItem; //this needed? or are we just doing a reference to the item?
-  writeDocument('feedItems', feedItem);  // Return a resolved version of the likeCounter
+  //console.log("feed item id is:" + feedItemId);                                 //debug (ID is correct)
+  //console.log("feed item (should be an object) is:" );                //debug (returning empty object?)
+  //console.log(feedItem);
+  //console.log("index is" + index);
+  var commentItem = feedItem.comments[index]; //get the specific item THIS ISN"T WORKING CORECTLY
 
+  //console.log("specific comment  object is: ")
+//  console.log(commentItem);                             //DEBUG
+  commentItem.likeCounter.push(userId); //push changes to the comment
+  feedItem.comments[index] =  commentItem; //this needed? or are we just doing a reference to the item? NOT SURE ABOUT
+
+  writeDocument('feedItems', feedItem);  // Return a resolved version of the likeCounter
+  //feedItem.likeCounter.map((userId) => readDocument('users', userId))
   emulateServerReturn(commentItem, cb);
 }
 
 
-export function unlikeComment(feedItemId, comindex, userId, cb) {
+export function unlikeComment(feedItemId, index, userId, cb) {
   var feedItem = readDocument('feedItems', feedItemId);
-  var commentItem = feedItem.comments[comindex]; //get the comment at the index specified
+  var commentItem = feedItem.comments[index]; //get the comment at the index specified (NOT WORKING)
   var userIndex = commentItem.likeCounter.indexOf(userId); //get if user is in list and if so at what index
   if (userIndex !== -1) {
-    commentItem.likeCounter.splice(userIndex, 1); //get rid of the user from like list
+    commentItem.likeCounter.splice(userIndex, 1); //get rid of the user from like list for a comment
     writeDocument('feedItems', feedItem); //write the item back
   }
 
